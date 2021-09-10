@@ -14,6 +14,9 @@ public class VestControler {
     @Autowired
     private VestRepository repository;
 
+    @Autowired
+    private KomentarRepository repositoryKomentari;
+
     @GetMapping(produces = {"application/json"})
     public ResponseEntity<Iterable<Vest>> getAll() {
         return ResponseEntity.ok().body(repository.findAll());
@@ -40,4 +43,17 @@ public class VestControler {
             return ResponseEntity.ok().build();
         }
     }
+
+    @DeleteMapping(value = "/deleteComment/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable long id) {
+        Optional<Komentar> k = repositoryKomentari.findById(id);
+        if(k.isEmpty())
+            return ResponseEntity.notFound().build();
+        else{
+            Komentar kom = k.get();
+            repositoryKomentari.delete(kom);
+            return ResponseEntity.ok().build();
+        }
+    }
+
 }
